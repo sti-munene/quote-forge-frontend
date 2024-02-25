@@ -17,10 +17,16 @@ import { Input } from "../ui/input";
 import { useSession } from "next-auth/react";
 import { User } from "../../../types/next-auth";
 import { useRouter } from "next/router";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 
 const customerFormSchema = z.object({
-  name: z.string(),
-  contact: z.string(),
+  name: z.string().min(2, "At least 2 characters required"),
+  contact: z.string().refine(
+    (value) => {
+      return isValidPhoneNumber(value);
+    },
+    { message: "Invalid phone number" }
+  ),
   business: z.string().transform((value) => {
     const id = parseInt(value);
     return id;
@@ -50,9 +56,10 @@ export function CustomerForm({
   });
 
   const onSubmit = async (values: z.infer<typeof customerFormSchema>) => {
+    console.log(values);
     try {
       setFormLoading(true);
-      await axios({
+      const res = await axios({
         method: action === "create" ? "post" : "patch",
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/`,
         data: values,
@@ -60,6 +67,8 @@ export function CustomerForm({
           Authorization: `Bearer ${session?.access_token}`,
         },
       });
+
+      console.log(res);
 
       setFormLoading(false);
       action === "create" && toast.success("Customer created.");
@@ -107,9 +116,16 @@ export function CustomerForm({
             name="contact"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contact me</FormLabel>
+                <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="+15558886865" {...field} />
+                  <PhoneInput
+                    {...field}
+                    international
+                    defaultCountry="GB"
+                    id="contact"
+                    placeholder="+44 56 4564 5648"
+                    countryCallingCodeEditable={false}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

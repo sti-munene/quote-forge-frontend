@@ -15,10 +15,16 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useSession } from "next-auth/react";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 
 const businessFormSchema = z.object({
-  name: z.string(),
-  phone: z.string(),
+  name: z.string().min(2, "At least 2 characters required"),
+  phone: z.string().refine(
+    (value) => {
+      return isValidPhoneNumber(value);
+    },
+    { message: "Invalid phone number" }
+  ),
 });
 
 interface BusinessFormProps {
@@ -108,7 +114,14 @@ export function BusinessForm({
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="+254710999333" {...field} />
+                  <PhoneInput
+                    {...field}
+                    international
+                    defaultCountry="GB"
+                    id="contact"
+                    placeholder="+44 56 4564 5648"
+                    countryCallingCodeEditable={false}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
