@@ -45,7 +45,7 @@ function ProductDetailPage({ product }: ProductDetailPageProps) {
               <DeleteItem
                 itemName="Product"
                 warningMessage={`Delete ${product.title}? This action cannot be undone.`}
-                apiUrl={`http://localhost:8000/api/products/${product.id}/`}
+                apiUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${product.id}/`}
               />
             </div>
           </div>

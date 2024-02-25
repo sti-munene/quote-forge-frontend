@@ -44,7 +44,7 @@ export function UserDetailsForm({
       setFormLoading(true);
       await axios({
         method: "patch",
-        url: "http://localhost:8000/api/auth/user/",
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
         data: values,
         headers: {
           Authorization: `Bearer ${session?.access_token}`,
@@ -53,7 +53,7 @@ export function UserDetailsForm({
 
       // Refetch the user data
       const updatedSession = await fetch(
-        "http://localhost:8000/api/auth/user/",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
         {
           method: "GET",
           headers: {

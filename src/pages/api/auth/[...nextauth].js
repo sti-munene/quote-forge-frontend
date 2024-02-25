@@ -21,7 +21,7 @@ const SIGN_IN_HANDLERS = {
       console.log(account);
       const response = await axios({
         method: "post",
-        url: process.env.NEXTAUTH_BACKEND_URL + "auth/google/",
+        url: process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/google/",
         data: {
           access_token: account["id_token"],
         },
@@ -62,7 +62,7 @@ export const authOptions = {
       async authorize(credentials, req) {
         try {
           const response = await axios({
-            url: process.env.NEXTAUTH_BACKEND_URL + "auth/login/",
+            url: process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/login/",
             method: "post",
             data: credentials,
           });
@@ -117,7 +117,7 @@ export const authOptions = {
       if (getCurrentEpochTime() > token["ref"]) {
         const response = await axios({
           method: "post",
-          url: process.env.NEXTAUTH_BACKEND_URL + "auth/token/refresh/",
+          url: process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/token/refresh/",
           data: {
             refresh: token["refresh_token"],
           },

@@ -54,7 +54,7 @@ export function CustomerForm({
       setFormLoading(true);
       await axios({
         method: action === "create" ? "post" : "patch",
-        url: "http://localhost:8000/api/customers/",
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/`,
         data: values,
         headers: {
           Authorization: `Bearer ${session?.access_token}`,

@@ -46,7 +46,7 @@ function CustomerDetailPage({ customer }: CustomerDetailPageProps) {
               <DeleteItem
                 itemName="Customer"
                 warningMessage={`Delete ${customer.name}? This action cannot be undone.`}
-                apiUrl={`http://localhost:8000/api/customers/${customer.id}/`}
+                apiUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/${customer.id}/`}
               />
             </div>
           </div>

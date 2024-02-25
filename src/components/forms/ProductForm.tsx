@@ -51,7 +51,7 @@ export function ProductForm({
   const onSubmit = async (values: z.infer<typeof productFormSchema>) => {
     const reqConfig = {
       method: action === "create" ? "post" : "patch",
-      url: "http://localhost:8000/api/products/",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/`,
       data: values,
       headers: {
         Authorization: `Bearer ${session?.access_token}`,

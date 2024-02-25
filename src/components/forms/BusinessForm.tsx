@@ -56,8 +56,8 @@ export function BusinessForm({
       method: action === "create" ? "post" : "patch",
       url:
         action === "create"
-          ? "http://localhost:8000/api/business/"
-          : `http://localhost:8000/api/business/${business?.id}/`,
+          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/`
+          : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/${business?.id}/`,
       data: values,
       headers: {
         Authorization: `Bearer ${session?.access_token}`,

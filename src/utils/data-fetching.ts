@@ -5,11 +5,14 @@ const baseAPIUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const getBusiness = async (session: Session) => {
   try {
-    const res = await axios.get("http://localhost:8000/api/business/", {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    });
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
 
     return res.data;
   } catch (err) {
@@ -20,7 +23,7 @@ export const getBusiness = async (session: Session) => {
 export const getCustomer = async (customerId: string, session: Session) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/api/customers/${customerId}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/${customerId}/`,
       {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -37,7 +40,7 @@ export const getCustomer = async (customerId: string, session: Session) => {
 export const getCustomers = async (session: Session, page_to_query: string) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/api/customers/?page=${page_to_query}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/?page=${page_to_query}`,
       {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -57,7 +60,7 @@ export const getQuotations = async (
 ) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/api/quotations/?page=${page_to_query}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quotations/?page=${page_to_query}`,
       {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -75,7 +78,7 @@ export const getQuotations = async (
 export const getProducts = async (session: Session, page_to_query: string) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/api/products/?page=${page_to_query}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/?page=${page_to_query}`,
       {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -96,7 +99,7 @@ export const getProducts = async (session: Session, page_to_query: string) => {
 export const getProduct = async (productId: string, session: Session) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/api/products/${productId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${productId}`,
       {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
