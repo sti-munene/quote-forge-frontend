@@ -6,10 +6,9 @@ export function UserDetails() {
 
   return (
     <div>
-      <h4>{session?.user?.name}</h4>
+      <h4>{session?.user?.first_name}</h4>
+      <h4>{session?.user?.last_name}</h4>
       <h4>{session?.user?.email}</h4>
-      <h4>{session?.user?.image}</h4>
-
       <h4>{session?.expires}</h4>
     </div>
   );
