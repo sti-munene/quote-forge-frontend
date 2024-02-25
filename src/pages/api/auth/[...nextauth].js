@@ -18,7 +18,6 @@ const SIGN_IN_HANDLERS = {
   },
   google: async (user, account, profile, email, credentials) => {
     try {
-      console.log(account);
       const response = await axios({
         method: "post",
         url: process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/google/",
@@ -26,10 +25,10 @@ const SIGN_IN_HANDLERS = {
           access_token: account["id_token"],
         },
       });
+
       account["meta"] = response.data;
       return true;
     } catch (error) {
-      console.error(error);
       return false;
     }
   },
