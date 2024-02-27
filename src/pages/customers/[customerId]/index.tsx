@@ -59,7 +59,7 @@ function CustomerDetailPage({ customer }: CustomerDetailPageProps) {
 export default CustomerDetailPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
+  const session: Session | null = await getServerSession(
     context.req,
     context.res,
     authOptions as any
@@ -70,11 +70,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/auth/sign-in" } };
   }
 
+  // If the user has not completed onboarding, redirect.
+  if (session && !session?.user?.has_completed_onboarding) {
+    return { redirect: { destination: "/onboarding" } };
+  }
+
   const business = await getBusiness(session as Session);
   const { customerId } = context?.params as { customerId: string };
 
   const customer = await getCustomer(customerId, session as Session);
-  console.log(customer);
 
   return {
     props: {

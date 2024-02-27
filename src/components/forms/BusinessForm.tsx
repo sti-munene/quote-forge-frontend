@@ -16,6 +16,8 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useSession } from "next-auth/react";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import { getUserDetails } from "@/utils";
+import { useRouter } from "next/router";
 
 const businessFormSchema = z.object({
   name: z.string().min(2, "At least 2 characters required"),
@@ -42,8 +44,9 @@ export function BusinessForm({
   action = "update",
   business,
 }: BusinessFormProps) {
-  const { data: session, status } = useSession({ required: true });
+  const { data: session, status, update } = useSession({ required: true });
   const [formLoading, setFormLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof businessFormSchema>>({
     resolver: zodResolver(businessFormSchema),
@@ -58,13 +61,21 @@ export function BusinessForm({
     // ✅ This will be type-safe and validated.
     console.log(values);
 
+    const fData =
+      action === "create"
+        ? {
+            ...values,
+            user: session?.user?.id,
+          }
+        : values;
+
     const reqConfig = {
       method: action === "create" ? "post" : "patch",
       url:
         action === "create"
-          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/`
+          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/create/`
           : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/business/${business?.id}/`,
-      data: values,
+      data: fData,
       headers: {
         Authorization: `Bearer ${session?.access_token}`,
       },
@@ -73,11 +84,27 @@ export function BusinessForm({
     try {
       setFormLoading(true);
       await axios(reqConfig);
+
+      if (session) {
+        const updatedUser = await getUserDetails(session);
+
+        // Update the session
+        await update({
+          ...session,
+          user: updatedUser,
+        });
+      }
+
       setFormLoading(false);
 
       action === "create" && toast.success("Business created.");
       action === "update" && toast.success("Business updated.");
+
+      if (action === "create") {
+        router.replace("/dashboard");
+      }
     } catch (error: any) {
+      console.log(error);
       setFormLoading(false);
       toast.error(error.message || "Something went wrong.");
     }

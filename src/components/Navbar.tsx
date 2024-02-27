@@ -43,12 +43,18 @@ export function Navbar() {
 
             {session && (
               <>
-                <Link
+                <button
                   className={buttonVariants({ variant: "link" })}
-                  href="/profile"
+                  onClick={() => {
+                    if (!session?.user?.has_completed_onboarding) {
+                      router.push("/onboarding");
+                    }
+
+                    router.push("/dashboard");
+                  }}
                 >
-                  Profile
-                </Link>
+                  Dashboard
+                </button>
 
                 <Button onClick={() => signOut({ callbackUrl: "/" })}>
                   Sign out

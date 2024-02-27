@@ -3,6 +3,23 @@ import { Session } from "next-auth";
 
 const baseAPIUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+export const getUserDetails = async (session: Session) => {
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+
 export const getBusiness = async (session: Session) => {
   try {
     const res = await axios.get(

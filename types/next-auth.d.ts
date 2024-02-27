@@ -6,6 +6,7 @@ interface User {
   first_name: string;
   last_name: string;
   email?: string;
+  has_completed_onboarding: boolean;
 }
 
 declare module "next-auth" {

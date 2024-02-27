@@ -99,7 +99,15 @@ export const authOptions = {
         credentials
       );
     },
-    async jwt({ user, token, account }) {
+    async jwt({ user, token, account, trigger, session }) {
+      if (trigger === "update") {
+        console.log("Update Trigger");
+        return {
+          ...token,
+          user: session.user,
+        };
+      }
+
       // If `user` and `account` are set that means it is a login event
       if (user && account) {
         let backendResponse =

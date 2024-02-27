@@ -77,7 +77,7 @@ interface SampleQuery {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
+  const session: Session | null = await getServerSession(
     context.req,
     context.res,
     authOptions as any
@@ -86,6 +86,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // If the user is already logged in, redirect.
   if (!session) {
     return { redirect: { destination: "/auth/sign-in" } };
+  }
+
+  // If the user has not completed onboarding, redirect.
+  if (session && !session?.user?.has_completed_onboarding) {
+    return { redirect: { destination: "/onboarding" } };
   }
 
   const query = context.query as SampleQuery;

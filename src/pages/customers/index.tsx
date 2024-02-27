@@ -1,10 +1,7 @@
-import React from "react";
-import axios from "axios";
 import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Container } from "@/components/Container";
-import { Product } from "@/components/Product";
 import { Heading } from "@/components/typography";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -74,7 +71,7 @@ interface SampleQuery {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
+  const session: Session | null = await getServerSession(
     context.req,
     context.res,
     authOptions as any
@@ -83,6 +80,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // If the user is already logged in, redirect.
   if (!session) {
     return { redirect: { destination: "/auth/sign-in" } };
+  }
+
+  // If the user has not completed onboarding, redirect.
+  if (session && !session?.user?.has_completed_onboarding) {
+    return { redirect: { destination: "/onboarding" } };
   }
 
   const query = context.query as SampleQuery;

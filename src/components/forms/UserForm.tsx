@@ -15,34 +15,28 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useSession } from "next-auth/react";
-import { User } from "../../../types/next-auth";
 
 const userDetailsFormSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
 });
 
-export function UserDetailsForm({
-  csrfToken,
-  user,
-}: {
-  csrfToken: string;
-  user?: User;
-}) {
+export function UserDetailsForm({ csrfToken }: { csrfToken: string }) {
   const { data: session, status, update } = useSession({ required: true });
   const [formLoading, setFormLoading] = useState(false);
+
   const form = useForm<z.infer<typeof userDetailsFormSchema>>({
     resolver: zodResolver(userDetailsFormSchema),
     defaultValues: {
-      first_name: user ? user.first_name : "",
-      last_name: user ? user.last_name : "",
+      first_name: session ? session?.user?.first_name : "",
+      last_name: session ? session?.user?.last_name : "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof userDetailsFormSchema>) => {
     try {
       setFormLoading(true);
-      await axios({
+      const res = await axios({
         method: "patch",
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
         data: values,
@@ -51,21 +45,11 @@ export function UserDetailsForm({
         },
       });
 
-      // Refetch the user data
-      const updatedSession = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-        }
-      ).then((res) => res.json());
-
-      console.log(updatedSession);
-
-      // Update the session
-      update(updatedSession);
+      // Update the session with the new user
+      await update({
+        ...session,
+        user: res.data,
+      });
 
       setFormLoading(false);
       toast.success("User updated.");

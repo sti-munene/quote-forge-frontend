@@ -73,7 +73,7 @@ function BusinessPage({ csrfToken, business }: BusinessPageProps) {
 export default BusinessPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
+  const session: Session | null = await getServerSession(
     context.req,
     context.res,
     authOptions as any
@@ -86,8 +86,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/auth/sign-in" } };
   }
 
+  // If the user has not completed onboarding, redirect.
+  if (session && !session?.user?.has_completed_onboarding) {
+    return { redirect: { destination: "/onboarding" } };
+  }
+
   const csrfToken = await getCsrfToken(context);
   const business = await getBusiness(session as Session);
+
+  // // Redirect user to the onboarding page if they have not set up business information
+  // if (!business) {
+  //   return { redirect: { destination: "/onboarding" } };
+  // }
 
   return {
     props: { csrfToken, business },

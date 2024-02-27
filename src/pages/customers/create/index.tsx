@@ -51,17 +51,20 @@ function CreateCustomerPage({ csrfToken, business }: CreateCustomerPageProps) {
 export default CreateCustomerPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
+  const session: Session | null = await getServerSession(
     context.req,
     context.res,
     authOptions as any
   );
 
-  // If the user is already logged in, redirect.
-  // Note: Make sure not to redirect to the same page
-  // To avoid an infinite loop!
+  // If the user is not logged in, redirect.
   if (!session) {
     return { redirect: { destination: "/auth/sign-in" } };
+  }
+
+  // If the user has not completed onboarding, redirect.
+  if (session && !session?.user?.has_completed_onboarding) {
+    return { redirect: { destination: "/onboarding" } };
   }
 
   const csrfToken = await getCsrfToken(context);

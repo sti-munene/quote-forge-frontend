@@ -20,6 +20,7 @@ export default function Home() {
               {session && (
                 <>
                   <h4 className="text-xl">Hello, {session?.user?.username}</h4>
+                  {/* <pre className="w-[80%]">{JSON.stringify(session)}</pre> */}
                 </>
               )}
               <h4 className="text-3xl">Welcome to Quote Forge</h4>
