@@ -4,8 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-
-import { Building2, FileStack, PackageSearch, User, Users } from "lucide-react";
+import {
+  Home,
+  Building2,
+  FileStack,
+  PackageSearch,
+  User,
+  Users,
+} from "lucide-react";
 import { Text } from "./typography";
 
 const LgSidePanel = () => {
@@ -13,7 +19,13 @@ const LgSidePanel = () => {
 
   return (
     <div className="hidden md:flex flex-col items-end gap-2 border-r h-screen">
-      <Link className={lgLinkStyles + " mt-4"} href="/profile">
+      <Link className={lgLinkStyles + " mt-4"} href="/dashboard">
+        <Home className="h-9 w-9" />
+        <Text size="body1" weight="medium" as="span">
+          Dashboard
+        </Text>
+      </Link>
+      <Link className={lgLinkStyles} href="/profile">
         <User className="h-9 w-9" />
         <Text size="body1" weight="medium" as="span">
           Profile
@@ -48,11 +60,15 @@ const LgSidePanel = () => {
 };
 
 const SmSidePanel = () => {
-  const smLinkStyles = `h-12 w-12 rounded-full w-full bg-transparent bg-opacity-10 flex items-center justify-center hover:bg-slate-400 hover:bg-opacity-20 dark:hover:bg-opacity-20 hover:text-primary text-sm`;
+  const smLinkStyles = `h-10 w-10 p-2 rounded-sm w-full bg-transparent bg-opacity-10 flex items-center justify-center hover:bg-slate-400 hover:bg-opacity-20 dark:hover:bg-opacity-20 hover:text-primary text-sm`;
 
   return (
     <div className="flex flex-col items-start gap-2 md:hidden h-screen overflow-y-auto border-r pr-2">
-      <Link className={smLinkStyles + " mt-4"} href="/profile">
+      <Link className={smLinkStyles + " mt-4"} href="/dashboard">
+        <Home className="h-7 w-7" />
+      </Link>
+
+      <Link className={smLinkStyles} href="/profile">
         <User className="h-7 w-7" />
       </Link>
 
